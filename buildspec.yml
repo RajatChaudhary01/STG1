@@ -22,6 +22,7 @@ phases:
       - echo Building the Docker image.
       - docker build -t stgprivate .
       - docker tag stgprivate:latest 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:latest
+      - docker tag stgprivate:latest 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
