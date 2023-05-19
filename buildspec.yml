@@ -12,7 +12,7 @@ phases:
       - echo log in to Amazon ECR...
       - aws --version
       - echo $AWS_DEFAULT_REGION
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 462506381755.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/o9s5z6y5
       - REPOSITORY_URI=462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
@@ -21,14 +21,14 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image.
-      - docker build -t stgprivate .
-      - docker tag stgprivate:latest 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:latest
-      - docker tag stgprivate:latest 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:$IMAGE_TAG
+      - docker build -t stgecr .
+      - docker tag stgecr:latest public.ecr.aws/o9s5z6y5/stgecr:latest
+      - docker tag stgecr:latest public.ecr.aws/o9s5z6y5/stgecr:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker push 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:latest
-      - docker push 462506381755.dkr.ecr.us-east-1.amazonaws.com/stgprivate:$IMAGE_TAG
+      - docker push public.ecr.aws/o9s5z6y5/stgecr:latest
+      - docker push public.ecr.aws/o9s5z6y5/stgecr:$IMAGE_TAG
       - echo write definitions file...
       - printf '[{"name":"exp-code-pipeline","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
