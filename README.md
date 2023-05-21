@@ -3,6 +3,8 @@ This respositry is being used for STG hackathon
 Team - Data Wizard
 
 
+<br>
+Helm folder contains all the helm chart files
 
 
 
@@ -19,8 +21,3 @@ Team - Data Wizard
 
 
 
-
-
-
-
-![visitors](https://visitor-badge.glitch.me/badge?page_id=page.id)
