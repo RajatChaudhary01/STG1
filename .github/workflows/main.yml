@@ -1,12 +1,22 @@
 name: Trigger Lambda function
+
 on:
   push:
     branches:
-      - main  
+      - main
+
 jobs:
   trigger-lambda:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Lambda function
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Replace with your desired AWS region
+
+      - name: Invoke Lambda function
         run: |
-          aws lambda invoke --function-name try1 --payload '{"commitSha": "${{ github.sha }}}"' --region ues-east-1 outfile.txt
+          PAYLOAD=$(echo '{"commitSha": "${{ github.sha }}}' | base64)
+          aws lambda invoke --function-name try1--payload $PAYLOAD outfile.txt
