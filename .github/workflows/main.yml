@@ -2,11 +2,11 @@ name: Trigger Lambda function
 on:
   push:
     branches:
-      - main
+      - main  
 jobs:
   trigger-lambda:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Lambda function
         run: |
-          aws lambda invoke --function-name try1 --payload '{"commitSha": "${{ github.sha }}}"' --region us-east-1
+          aws lambda invoke --function-name try1 --payload '{"commitSha": "${{ github.sha }}}"' --region ues-east-1 outfile.txt
