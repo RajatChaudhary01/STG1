@@ -18,10 +18,8 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get install python3-pip -y
-          sudo pip3 install awscli
+      - name: Create AWS credentials directory
+        run: mkdir $HOME/.aws
 
       - name: Configure AWS credentials
         run: |
@@ -34,4 +32,4 @@ jobs:
         run: |
           PAYLOAD=$(echo '{"commitSha": "${{ github.sha }}}' | base64)
           echo $PAYLOAD | base64 --decode > payload.json
-          aws lambda invoke --function-name try1--payload fileb://payload.json outfile.txt
+          aws lambda invoke --function-name try1 --payload fileb://payload.json outfile.txt
