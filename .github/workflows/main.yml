@@ -1,4 +1,4 @@
-name: Trigger Lambda function
+name: Trigger Lambda Function
 
 on:
   push:
@@ -6,17 +6,32 @@ on:
       - main
 
 jobs:
-  trigger-lambda:
+  invoke-lambda:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Set up AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Replace with your desired AWS region
+          node-version: 14
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get install python3-pip -y
+          sudo pip3 install awscli
+
+      - name: Configure AWS credentials
+        run: |
+          echo "[default]" >> $HOME/.aws/credentials
+          echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> $HOME/.aws/credentials
+          echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> $HOME/.aws/credentials
+          echo "region=us-east-1" >> $HOME/.aws/credentials
 
       - name: Invoke Lambda function
         run: |
           PAYLOAD=$(echo '{"commitSha": "${{ github.sha }}}' | base64)
-          aws lambda invoke --function-name try1--payload $PAYLOAD outfile.txt
+          echo $PAYLOAD | base64 --decode > payload.json
+          aws lambda invoke --function-name try1--payload fileb://payload.json outfile.txt
